@@ -1,0 +1,20 @@
+산림통계시스템->산림면적
+산림청->임산물표준재배지침
+https://www.bigdata-forest.kr/product/FRT001301->산림입지토양도
+https://www.bigdata-forest.kr/product/MTW001801->단기임산물생산량분포정보
+https://mdis.kostat.go.kr/dwnlSvc/ofrSurvSearch.do?curMenuNo=UI_POR_P9240->임산물생산조사(2022)
+
+기상청 ->우리나라 기후평년
+산림면적
+
+인지토양도 shp
+기후+산림면적 데이터 습도포함
+임산물생산조사는 메타 데이터
+
+산림구역 
+시도별 임산물 생산miiim888888m
+지형분포(산록,산복,산정)
+최고최저 강수량
+버섯생산량(지역별)
+밤나무 재배시 고용노동력 확보
+감나무 재배시 고용 노동력 확보
