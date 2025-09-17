@@ -143,3 +143,18 @@
 - **분석 기법:** 상관분석, 카이제곱검정, ANOVA, SVM, 랜덤포레스트, 로지스틱 회귀  
 - **시각화:** matplotlib, heatmap, GeoDataFrame 지도 시각화   
 
+
+---
+
+## 분석 노트북
+- [data_preprocessing.ipynb](./notebooks/data_preprocessing.ipynb)  
+- [exploration.ipynb](./notebooks/exploration.ipynb)  
+- [production_data_processing.ipynb](./notebooks/production_data_processing.ipynb)  
+- [chungnam_soil_analysis.ipynb](./notebooks/chungnam_soil_analysis.ipynb)  -각 지역마다 존재 하나만 업로드
+- [chungnam_soil_moisture.ipynb](./notebooks/chungnam_soil_moisture.ipynb)  -각 지역마다 존재 하나만 업로드
+- [modeling_logit_rf_svm_region.ipynb](./notebooks/modeling_logit_rf_svm_region.ipynb)  
+- [final_modeling.ipynb](./notebooks/final_modeling.ipynb)  
+- [forestry_visualization.ipynb](./notebooks/forestry_visualization.ipynb)  
+- [crop_optimal_conditions.ipynb](./notebooks/crop_optimal_conditions.ipynb)  
+
+---
