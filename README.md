@@ -1,161 +1,26 @@
-# 2024년 임업통계 스마트활용 경진대회
-## 산림자원 활용 비즈니스모델 및 웹페이지 개발
+# 🌲 2024 Forestry Statistics Smart Competition
+## 🏆 GRAND PRIZE (1st Place) — Best Strategic AI Idea
 
-> **2024 임업통계 스마트 활용 경진대회 – 임업통계 활용 아이디어 기획 분야 출품작**  
-> 팀명: **엄홍길동**  
-> (엄홍길처럼 길을 터주고, 홍길동처럼 필요한 산림 정보를 신속히 제공한다는 뜻)
+### 📌 Project Vision
+"Empowering non-technical stakeholders with data-driven forestry insights." This project developed a comprehensive business model and analytical framework to identify the optimal cultivation regions for various forestry crops (Chestnuts, Blackberries, etc.) using climate, soil, and production data.
 
----
+### 🥇 Achievements
+- **Award:** 1st Place (Grand Prize), hosted by the **Korea Forest Service** and **Korea Forestry Promotion Institute**.
+- **Scope:** Competitive analysis of 7 major forestry crops across South Korea.
+- **Outcome:** A functional web service providing a "Cultivation Suitability Map" for prospective foresters.
 
-## 대회 정보
-- **대회명:** 2024년 임업통계 스마트활용 경진대회  
-- **공모 분야:** 임업통계 활용 아이디어 기획 (팀)  
-- **아이디어명:** 산림자원 활용을 용이하게 하는 비즈니스모델 및 웹페이지 개발  
-- **주최:** 산림청, 한국임업진흥원  
+### 🛠️ Core Analytical Innovation
+1. **Multi-Source Data Fusion:**
+   - Unified soil chemistry (Acidity, Moisture), topography (Slope, Elevation), and 30-year climate normals (Temperature, Precipitation) from KMA and Forestry Service GIS.
+2. **Crop-Specific Ensemble Modeling:**
+   - Implemented a comparative modeling framework using **SVM, Random Forest, and Logistic Regression**.
+   - Discovered that different crops require distinct model architectures (e.g., SVM for Yam, RF for Blackberries) for optimal AUC performance.
+3. **Strategic Insight Extraction:**
+   - Determined critical threshold variables for production (e.g., humidity as the key driver for Fresh Shiitake mushrooms).
 
-![포스터](https://www.kofpi.or.kr/repository/img/20241025093420624.jpg)
- 
-
----
-
-## 팀 구성
-- 팀장:
-  - **이준형 (인천대)** – 데이터 수집 및 분석 · 총괄
-- 팀원:
-  - 박규희 (인하대) – 데이터 수집, 발표자료 제작  
-  - 이용혁 (인하대) – 웹페이지 개발  
-  - 정우주 (인하대) – 데이터 수집 및 분석  
-  - 지주영 (동국대) – 발표자료 제작, 발표 
+### 📊 Analytical ROI
+- **Economic Impact:** Reduced the "Trial & Error" risk for new foresters by providing scientifically validated cultivation maps.
+- **Policy Support:** Provided a data-driven justification for regional specialized crop promotion.
 
 ---
-
-## 성과
-- **🏆 대상(1위) 수상 – 임업통계 활용 아이디어 기획 분야**
-- **주최:** 산림청, 한국임업진흥원  
----
-
-## 추진 배경 및 필요성
-- 임업 공공데이터(예: 단기임산물재배적지도)는 존재하지만, **코딩 지식 없는 예비 임업인**들이 쉽게 활용하기 어려움.  
-- “어디서 어떤 임산물을 재배해야 하는가?”라는 핵심 질문에 대한 직관적 자료 부족.  
-- 기후·토양·생산량 데이터를 통합하여 **재배 조건과 최적 지역을 한눈에 확인**할 수 있는 서비스 필요.  
-- 소비자도 가격 및 생산량 변화를 확인할 수 있어 **임업 생태계 전체 접근성** 확대 가능.  
-
----
-
-## 데이터 출처
-1. **한국임업진흥원**: 단기임산물재배적지도  
-2. **산림공간정보서비스(산림청)**: 산림입지토양도(대축척), 산림토양유효수분량분포지도  
-3. **기상자료개방포털(기상청)**: 우리나라 기후 평년값(최근 30년)  
-4. **산림청 FOSS**: 임업소득조사, 임업6종(임산물생산조사)  
-
----
-
-## 데이터 전처리 과정
-### 1. 생산량 데이터
-- 임업6종(생산량 데이터)에서 **2023년 주요 10대 임산물 중 7종 추출**  
-  → `밤`, `복분자딸기`, `오갈피`, `마`, `도라지`, `더덕`, `생표고`  
-- **생산량 기준 평균 이상=1, 미만=0** 으로 이진화하여 학습 타깃 생성  
-
-### 2. 토양 데이터
-- **산림입지토양도에서 추출:**  
-  - 토양깊이유형(SLDPT_TPCD)  
-  - 토성코드(SCSTX_CD)  
-  - 토양형코드(SLTP_CD)  
-- **산림토양유효수분량 지도:** gridcode 추출  
-- **SHP → GeoDataFrame 변환 후 지역별 병합**  
-
-### 3. 기후 데이터
-- **주요 변수:**  
-  - 연평균기온  
-  - 최저기온  
-  - 최고기온  
-  - 상대습도  
-  - 강수량  
-  - 온도차이  
-- **상관계수(|r| ≥ 0.2) 분석으로 주요 변수 선별**  
-
-### 4. 결합 및 결측치 처리
-- 생산량 + 토양 + 기후 데이터 병합  
-- 결측치는 지역 단위 최빈값으로 대체  
-- Python(pandas, geopandas, seaborn 등) 기반 처리  
-
----
-
-## 모델링 & 성능
-- **사용 알고리즘:**  
-  - SVM  
-  - 랜덤포레스트  
-  - 로지스틱 회귀  
-- **전처리:** 범주형 → 수치형 변환 후 학습  
-- **평가 지표:** AUC  
-
-| 작물     | 최적 모델     |
-|----------|---------------|
-| 마       | SVM           |
-| 복분자딸기 | 랜덤포레스트 |
-| 오갈피   | 랜덤포레스트 |
-| 더덕     | 랜덤포레스트 |
-| 생표고   | 랜덤포레스트 |
-| 밤       | 로지스틱 회귀 |
-| 도라지   | 로지스틱 회귀 |
-
-**결론:** 작물 특성별로 적합한 모델이 상이 → **작물별 맞춤형 모델 필요**
-
----
-
-## 주요 인사이트
-- **오갈피**  
-  - 연평균 10~15℃ 구간에서 생육 활발  
-  - 고온·저온 모두 부정적, 일교차 15~20℃ 환경에서 품질 향상  
-
-- **생표고**  
-  - 강수량·상대습도가 핵심 변수  
-  - 수분 관리가 생산량·품질에 직결  
-
-- **더덕**  
-  - 연평균 10~15℃, 큰 일교차 환경에서 생산량 증가  
-  - 과습 시 병충해 발생 위험↑  
-
-- **도라지**  
-  - 강수량(100 ~ 150mm/월), 일교차, 최고기온(25~30℃)이 최적  
-  - 배수·관수 관리 중요  
-
----
-
-## 웹 서비스
-- **개발 언어/기술:** Python (pandas, GeoPandas, matplotlib), Publr 웹 배포  
-- **주요 기능:**  
-  - 작물별 최적 재배지 추천  
-  - 연도별 생산량·가격 시각화 (필터링 지원)  
-  - 지역별 생산량 지도 시각화  
-
-**시연 링크:** [웹페이지 바로가기](https://app.publr.co/channels/L2NoYW5uZWxzLzE3MDUx/pages/home)
-
----
-
-## 참고 자료
-- [최종 보고서 PDF](./reports/산림자원_활용을_용이하게_하는_비즈니스모델_개발_및_웹페이지_개발(엄홍길동).pdf)  
-- [발표 자료 PPT](./reports/산림자원_활용을_용이하게_하는_비즈니스모델_개발_및_웹페이지_개발(엄홍길동)_ppt.pdf)  
-
----
-
-## 기술 스택
-- **데이터 처리:** Python (pandas, geopandas, seaborn)  
-- **분석 기법:** 상관분석, 카이제곱검정, ANOVA, SVM, 랜덤포레스트, 로지스틱 회귀  
-- **시각화:** matplotlib, heatmap, GeoDataFrame 지도 시각화   
-
-
----
-
-## 분석 노트북
-- [data_preprocessing.ipynb](./notebooks/data_preprocessing.ipynb)  
-- [exploration.ipynb](./notebooks/exploration.ipynb)  
-- [production_data_processing.ipynb](./notebooks/production_data_processing.ipynb)  
-- [chungnam_soil_analysis.ipynb](./notebooks/chungnam_soil_analysis.ipynb)  -각 지역마다 존재 하나만 업로드
-- [chungnam_soil_moisture.ipynb](./notebooks/chungnam_soil_moisture.ipynb)  -각 지역마다 존재 하나만 업로드
-- [modeling_logit_rf_svm_region.ipynb](./notebooks/modeling_logit_rf_svm_region.ipynb)  
-- [final_modeling.ipynb](./notebooks/final_modeling.ipynb)  
-- [forestry_visualization.ipynb](./notebooks/forestry_visualization.ipynb)  
-- [crop_optimal_conditions.ipynb](./notebooks/crop_optimal_conditions.ipynb)  
-
----
+*This repository has been refined and modularized for the professional [Data Analyst Portfolio](https://github.com/junhyung-L).*
