@@ -1,6 +1,7 @@
 """
 2024 Forestry Stats Smart Competition: Statistical Analysis Module
 Refactored from notebooks/data_preprocessing.ipynb
+Fully translated to English.
 """
 
 import logging
@@ -20,26 +21,45 @@ class ForestryStatAnalyzer:
         self.data_path = data_path
         self.encoding = encoding
         self.data = None
+
+        # Column mapping for translation
+        self.column_mapping = {
+            "토양깊이유형": "soil_depth_type",
+            "토성코드": "soil_texture_code",
+            "토양형코드": "soil_type_code",
+            "토양유효수분량": "soil_effective_moisture",
+            "밤 (kg)": "chestnut_kg",
+            "복분자딸기 (kg)": "blackberry_kg",
+            "오갈피 (kg)": "ogapi_kg",
+            "마 (kg)": "yam_kg",
+            "도라지 (kg)": "doraji_kg",
+            "더덕 (kg)": "deodeok_kg",
+            "생표고 (kg)": "shiitake_kg",
+        }
+
         self.categorical_columns = [
-            "토양깊이유형",
-            "토성코드",
-            "토양형코드",
-            "토양유효수분량",
+            "soil_depth_type",
+            "soil_texture_code",
+            "soil_type_code",
+            "soil_effective_moisture",
         ]
         self.production_columns = [
-            "밤 (kg)",
-            "복분자딸기 (kg)",
-            "오갈피 (kg)",
-            "마 (kg)",
-            "도라지 (kg)",
-            "더덕 (kg)",
-            "생표고 (kg)",
+            "chestnut_kg",
+            "blackberry_kg",
+            "ogapi_kg",
+            "yam_kg",
+            "doraji_kg",
+            "deodeok_kg",
+            "shiitake_kg",
         ]
 
     def load_data(self) -> pd.DataFrame:
-        """Loads data and ensures correct types."""
+        """Loads data, renames columns to English, and ensures correct types."""
         logging.info(f"Loading data from {self.data_path}")
         self.data = pd.read_csv(self.data_path, encoding=self.encoding)
+
+        # Rename columns to English
+        self.data.rename(columns=self.column_mapping, inplace=True)
 
         # Ensure categorical columns are treated as objects
         for col in self.categorical_columns:
@@ -77,7 +97,7 @@ class ForestryStatAnalyzer:
 
         # ANOVA test
         anova_results = {}
-        for cat_col in self.categorical_columns:
+        for cat_col in filtered_data.columns:
             if cat_col in filtered_data.columns:
                 groups = [
                     group[production_col].values
