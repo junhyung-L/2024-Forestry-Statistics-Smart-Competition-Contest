@@ -55,6 +55,14 @@ Feature importances (coefficients) derived from the predictive models revealed t
     *   **Negative Drivers**: Soil Type 3 (-0.82), Annual Mean Temperature (-0.75).
 *   **Blackberry (복분자딸기)**:
     *   **Positive Drivers**: Relative Humidity (+0.78), Max Temperature (+0.35).
+*   **Deodeok (더덕)**:
+    *   **Top Drivers**: Annual Mean Temperature (0.21), Temperature Difference (0.17).
+*   **Shiitake (생표고)**:
+    *   **Top Drivers**: Precipitation (0.26), Max Temperature (0.23).
+*   **Yam (마)**:
+    *   **Top Drivers**: Min Temperature (0.35), Max Temperature (0.34).
+*   **Bellflower (도라지)**:
+    *   **Top Drivers**: Temperature Difference (0.34), Precipitation (0.34).
 
 #### 3. Model Performance (AUC Scores)
 The models were evaluated using the Area Under the ROC Curve (AUC). The real results captured from the analysis are as follows:
