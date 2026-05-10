@@ -24,7 +24,15 @@ The project focuses on optimizing crop cultivation and predicting production usi
 
 ## 🔬 3. Statistical Analysis & Insights (통계 분석 및 인사이트)
 
-- **Methodology**: Conducted Chi-Square tests, ANOVA, and Spearman correlation to validate relationships between soil conditions and crop production.
+- **Methodology**: Conducted Chi-Square tests, ANOVA, Levene's test, and Spearman correlation to validate relationships between soil conditions and crop production.
+- **Homogeneity of Variance (Levene's Test)**: Verified the assumption of equal variances across different crop production groups to ensure valid ANOVA results.
+![Levene's Test](images/levenes_test.png)
+*Figure 2: Levene's Test results showing p-values for different crop variables.*
+
+- **Correlation Analysis**: Generated a comprehensive heatmap to analyze the complex relationships between crops and environmental variables.
+![Correlation Heatmap](images/correlation_heatmap.png)
+*Figure 3: Correlation Heatmap between crops and climate variables.*
+
 - **Key Insights**:
   - Validated critical threshold variables for production.
   - Discovered that **humidity** is the key driver for Fresh Shiitake mushrooms yield (p-value < 0.05).
@@ -65,15 +73,24 @@ Feature importances (coefficients) derived from the predictive models revealed t
     *   **Top Drivers**: Temperature Difference (0.34), Precipitation (0.34).
 
 #### 3. Model Performance (AUC Scores)
-The models were evaluated using the Area Under the ROC Curve (AUC). The real results captured from the analysis are as follows:
+The models were evaluated using the Area Under the ROC Curve (AUC). The ROC curves demonstrate high predictive power for key crops:
 
 | Crop | Model | Metric | Score (AUC) | Status |
 | :--- | :--- | :--- | :---: | :--- |
+| **Chestnut (밤)** | Random Forest Classifier | AUC | **0.94** | Excellent |
+| **Yam (마)** | Random Forest Classifier | AUC | **0.91** | Excellent |
 | **Blackberry (복분자딸기)** | Random Forest Classifier | AUC | **0.84** | High Predictive Power |
-| **Ogapi (오갈피)** | Random Forest Classifier | AUC | **0.57** | Baseline Performance (Needs Improvement) |
+| **Ogapi (오갈피)** | Random Forest Classifier | AUC | **0.57** | Baseline Performance |
 
-*   **Insight**: The model performs exceptionally well for **Blackberry** (AUC = 0.84), indicating that the selected soil and climate features are strong predictors.
-*   **Challenge & Future Work**: For **Ogapi** (AUC = 0.57), the performance suggests that growth might be influenced by other latent factors not in the dataset (e.g., specific micro-climates), presenting a clear direction for future feature engineering.
+<div style="display: flex; justify-content: space-around;">
+  <img src="images/roc_chestnut.png" alt="ROC Chestnut" width="30%"/>
+  <img src="images/roc_yam.png" alt="ROC Yam" width="30%"/>
+  <img src="images/roc_blackberry.png" alt="ROC Blackberry" width="30%"/>
+</div>
+*Figure 4: ROC Curves for Chestnut (AUC=0.94), Yam (AUC=0.91), and Blackberry (AUC=0.84).*
+
+*   **Insight**: The model performs exceptionally well for **Chestnut** and **Yam** (AUC > 0.90), and **Blackberry** (AUC = 0.84), indicating that the selected soil and climate features are strong predictors.
+*   **Challenge & Future Work**: For **Ogapi** (AUC = 0.57), the performance suggests that growth might be influenced by other latent factors not in the dataset, presenting a clear direction for future feature engineering.
 
 - **Regression**: Used **Random Forest Regressor** to predict production amounts and extract feature importances.
   - **Refactored Module**: `src/predictor.py`
