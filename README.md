@@ -57,8 +57,21 @@ The project focuses on optimizing crop cultivation and predicting production usi
 │   ├── stat_analyzer.py        # Chi-Square, ANOVA, and Spearman analysis
 │   ├── predictor.py            # Random Forest regression
 │   └── classifier.py          # SVM classification for suitability
-└── reports/                    # Competition reports and presentations
+├── reports/                    # Competition reports and presentations
+├── run_pipeline.py             # Master pipeline runner
+└── requirements.txt            # Project dependencies
 ```
+
+## ⚙️ How to Run
+
+1. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. Run the full pipeline:
+   ```bash
+   python run_pipeline.py
+   ```
 
 ## 👥 Contributors
 
