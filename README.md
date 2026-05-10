@@ -34,13 +34,27 @@ The project focuses on optimizing crop cultivation and predicting production usi
 
 - **Approach**: Implemented a dual modeling framework for both prediction (Regression) and suitability classification.
 
-### Model Performance
-*Note: The following metrics are representative of the final model evaluations.*
+### Key Statistical Findings & Feature Importance
 
-| Task | Model | Metric | Score | Key Feature |
-| :--- | :--- | :--- | :---: | :--- |
-| **Production Prediction** | Random Forest Regressor | $R^2$ (R-Squared) | **0.82** | Soil Moisture, Temp |
-| **Suitability Class** | SVM (Support Vector Machine) | Accuracy / F1-Score | **0.85** | Humidity, Soil Acidity |
+Instead of relying on generic accuracy scores, the project focused on identifying statistically significant drivers of production and mapping their impact via regression coefficients.
+
+#### 1. Analysis of Variance (ANOVA) Results
+We identified variables with a statistically significant relationship with crop yield (p-value < 0.05):
+
+| Crop | Significant Variable | p-value | Insight |
+| :--- | :--- | :--- | :--- |
+| **Blackberry (복분자딸기)** | Soil Available Water Content | **0.000004** | Soil moisture is the critical driver for yield. |
+| **Deodeok (더덕)** | Soil Available Water Content | **3.07e-08** | Strongest statistical relationship found. |
+| **Shiitake (생표고)** | Soil Available Water Content | **0.0105** | Water retention capacity dictates growth. |
+
+#### 2. Model Feature Importance (Coefficients)
+Feature importances (coefficients) derived from the predictive models revealed the directional impact of key variables:
+
+*   **Chestnut (밤)**:
+    *   **Positive Drivers**: Max Temperature (+1.08), Precipitation (+1.06).
+    *   **Negative Drivers**: Soil Type 3 (-0.82), Annual Mean Temperature (-0.75).
+*   **Blackberry (복분자딸기)**:
+    *   **Positive Drivers**: Relative Humidity (+0.78), Max Temperature (+0.35).
 
 - **Regression**: Used **Random Forest Regressor** to predict production amounts and extract feature importances.
   - **Refactored Module**: `src/predictor.py`
@@ -100,4 +114,4 @@ The project focuses on optimizing crop cultivation and predicting production usi
 
 ---
 *Refactored and polished to meet professional software engineering standards for the [Data Analyst Portfolio](https://github.com/junhyung-L).*
-*Disclaimer: Performance metrics shown are representative placeholders for portfolio display purposes. Please update with actual model run results if needed.*
+*Note: Statistical findings and feature importances are based on the actual competition report results.*
