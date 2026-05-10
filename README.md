@@ -1,26 +1,50 @@
-# 🌲 2024 Forestry Statistics Smart Competition
-## 🏆 GRAND PRIZE (1st Place) — Best Strategic AI Idea
+# 2024 Forestry Statistics Smart Competition: Grand Prize (1st Place) 🏆
 
-### 📌 Project Vision
-"Empowering non-technical stakeholders with data-driven forestry insights." This project developed a comprehensive business model and analytical framework to identify the optimal cultivation regions for various forestry crops (Chestnuts, Blackberries, etc.) using climate, soil, and production data.
+This repository contains the award-winning project for the **'2024 Forestry Statistics Smart Competition'** hosted by the **Korea Forest Service** and **Korea Forestry Promotion Institute**.
 
-### 🥇 Achievements
-- **Award:** 1st Place (Grand Prize), hosted by the **Korea Forest Service** and **Korea Forestry Promotion Institute**.
-- **Scope:** Competitive analysis of 7 major forestry crops across South Korea.
-- **Outcome:** A functional web service providing a "Cultivation Suitability Map" for prospective foresters.
+The project focuses on optimizing crop cultivation and predicting production using advanced statistical analysis and machine learning techniques on forestry and environmental data.
 
-### 🛠️ Core Analytical Innovation
-1. **Multi-Source Data Fusion:**
-   - Unified soil chemistry (Acidity, Moisture), topography (Slope, Elevation), and 30-year climate normals (Temperature, Precipitation) from KMA and Forestry Service GIS.
-2. **Crop-Specific Ensemble Modeling:**
-   - Implemented a comparative modeling framework using **SVM, Random Forest, and Logistic Regression**.
-   - Discovered that different crops require distinct model architectures (e.g., SVM for Yam, RF for Blackberries) for optimal AUC performance.
-3. **Strategic Insight Extraction:**
-   - Determined critical threshold variables for production (e.g., humidity as the key driver for Fresh Shiitake mushrooms).
+## 🚀 Project Overview
 
-### 📊 Analytical ROI
-- **Economic Impact:** Reduced the "Trial & Error" risk for new foresters by providing scientifically validated cultivation maps.
-- **Policy Support:** Provided a data-driven justification for regional specialized crop promotion.
+- **Objective**: To identify optimal conditions for various crops and predict their production based on soil and climate data.
+- **Impact**: Provides actionable insights for farmers and policymakers to maximize crop yield and sustainability.
+- **Key Achievements**: Awarded the **Grand Prize (1st Place)** in the competition.
+
+## 📁 Repository Structure
+
+The repository has been refactored from Jupyter notebooks into a professional, modular Python package.
+
+```text
+├── notebooks/                  # Original exploratory Jupyter notebooks
+│   ├── data_preprocessing.ipynb
+│   ├── final_modeling.ipynb
+│   └── ...
+├── src/                        # Refactored production-ready source code
+│   ├── statistical_analysis.py # Chi-Square, ANOVA, and Spearman analysis
+│   └── modeling.py             # Random Forest regression and feature importance
+└── reports/                    # Competition reports and presentations
+```
+
+## 🛠️ Key Features
+
+### 1. Statistical Analysis (`src/statistical_analysis.py`)
+- Refactored from `notebooks/data_preprocessing.ipynb`.
+- Performs rigorous statistical tests to validate relationships between soil conditions and crop production.
+- Includes **Chi-Square test**, **ANOVA**, and **Spearman correlation**.
+
+### 2. Crop Production Modeling (`src/modeling.py`)
+- Refactored from `notebooks/final_modeling.ipynb`.
+- Trains **Random Forest Regressor** models to predict production amounts for various crops (Chestnut, Blackberry, etc.).
+- Extracts and visualizes **Feature Importances** to identify key growth drivers (climate vs. soil).
+
+## 📊 Results
+
+- Successfully identified critical soil depth and moisture levels for target crops.
+- Modeled climate impact (temperature difference, precipitation) on yield with high accuracy.
+
+## 👥 Contributors
+
+- **Junhyung L.** (Project Lead / Data Scientist)
 
 ---
-*This repository has been refined and modularized for the professional [Data Analyst Portfolio](https://github.com/junhyung-L).*
+*Refactored and polished to meet professional software engineering standards.*
