@@ -41,12 +41,13 @@ The project focuses on optimizing crop cultivation and predicting production usi
 
 ## 🖼️ 5. Visualization & Prototype (시각화 및 프로토타입)
 
-- **Suitability Mapping**:
-  - Generated predictive maps to identify optimal cultivation zones.
-  - Visualized feature importance to help stakeholders understand key drivers.
+- **Service Dashboard**:
+  - Visualized geographic information using Geopandas heatmaps.
+  - Provided a recommendation list for optimal cultivation sites.
+  - Displayed market trends and price analysis.
 
-![Forestry Suitability Map](images/forestry_suitability_map.png)
-*Figure 1: Predictive map for crop suitability and feature importance analysis (Mockup representing the analysis).*
+![Service Dashboard](images/dashboard_collage.png)
+*Figure 1: Service flow and dashboard collage including Geopandas heatmap, recommendation list, and market graph.*
 
 ## 🏁 6. Conclusion & Business Impact (결론 및 비즈니스 임팩트)
 
@@ -68,7 +69,7 @@ The project focuses on optimizing crop cultivation and predicting production usi
 │   └── classifier.py          # SVM classification for suitability
 ├── reports/                    # Competition reports and presentations
 ├── images/                     # Project screenshots and diagrams
-│   └── forestry_suitability_map.png
+│   └── dashboard_collage.png  # User-provided service dashboard
 ├── run_pipeline.py             # Master pipeline runner
 └── requirements.txt            # Project dependencies
 ```
