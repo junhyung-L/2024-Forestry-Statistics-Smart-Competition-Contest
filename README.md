@@ -39,7 +39,16 @@ The project focuses on optimizing crop cultivation and predicting production usi
   - **Refactored Module**: `src/classifier.py`
 - **Key Findings**: Discovered that different crops require distinct model architectures for optimal performance.
 
-## 🏁 5. Conclusion & Business Impact (결론 및 비즈니스 임팩트)
+## 🖼️ 5. Visualization & Prototype (시각화 및 프로토타입)
+
+- **Suitability Mapping**:
+  - Generated predictive maps to identify optimal cultivation zones.
+  - Visualized feature importance to help stakeholders understand key drivers.
+
+![Forestry Suitability Map](images/forestry_suitability_map.png)
+*Figure 1: Predictive map for crop suitability and feature importance analysis (Mockup representing the analysis).*
+
+## 🏁 6. Conclusion & Business Impact (결론 및 비즈니스 임팩트)
 
 - **Outcome**: Developed a framework for a functional web service providing a "Cultivation Suitability Map" for prospective foresters.
 - **Analytical ROI**:
@@ -58,6 +67,8 @@ The project focuses on optimizing crop cultivation and predicting production usi
 │   ├── predictor.py            # Random Forest regression
 │   └── classifier.py          # SVM classification for suitability
 ├── reports/                    # Competition reports and presentations
+├── images/                     # Project screenshots and diagrams
+│   └── forestry_suitability_map.png
 ├── run_pipeline.py             # Master pipeline runner
 └── requirements.txt            # Project dependencies
 ```
