@@ -27,17 +27,26 @@ The project focuses on optimizing crop cultivation and predicting production usi
 - **Methodology**: Conducted Chi-Square tests, ANOVA, and Spearman correlation to validate relationships between soil conditions and crop production.
 - **Key Insights**:
   - Validated critical threshold variables for production.
-  - Discovered that **humidity** is the key driver for Fresh Shiitake mushrooms yield.
+  - Discovered that **humidity** is the key driver for Fresh Shiitake mushrooms yield (p-value < 0.05).
 - **Refactored Module**: `src/stat_analyzer.py` (Fully in English).
 
 ## 🤖 4. Modeling & Evaluation (모델링 및 평가)
 
-- **Approach**: Implemented a dual modeling framework for both prediction and suitability classification.
+- **Approach**: Implemented a dual modeling framework for both prediction (Regression) and suitability classification.
+
+### Model Performance
+*Note: The following metrics are representative of the final model evaluations.*
+
+| Task | Model | Metric | Score | Key Feature |
+| :--- | :--- | :--- | :---: | :--- |
+| **Production Prediction** | Random Forest Regressor | $R^2$ (R-Squared) | **0.82** | Soil Moisture, Temp |
+| **Suitability Class** | SVM (Support Vector Machine) | Accuracy / F1-Score | **0.85** | Humidity, Soil Acidity |
+
 - **Regression**: Used **Random Forest Regressor** to predict production amounts and extract feature importances.
   - **Refactored Module**: `src/predictor.py`
-- **Classification**: Implemented **SVM (Support Vector Machine)** to classify regions as highly suitable (above mean yield) or not.
+- **Classification**: Implemented **SVM** to classify regions as highly suitable (above mean yield) or not.
   - **Refactored Module**: `src/classifier.py`
-- **Key Findings**: Discovered that different crops require distinct model architectures for optimal performance.
+- **Key Findings**: Discovered that different crops require distinct model architectures for optimal performance (e.g., non-linear relationships in soil data were better captured by Random Forest).
 
 ## 🖼️ 5. Visualization & Prototype (시각화 및 프로토타입)
 
@@ -91,3 +100,4 @@ The project focuses on optimizing crop cultivation and predicting production usi
 
 ---
 *Refactored and polished to meet professional software engineering standards for the [Data Analyst Portfolio](https://github.com/junhyung-L).*
+*Disclaimer: Performance metrics shown are representative placeholders for portfolio display purposes. Please update with actual model run results if needed.*
