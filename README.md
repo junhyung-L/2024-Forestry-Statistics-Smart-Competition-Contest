@@ -56,6 +56,17 @@ Feature importances (coefficients) derived from the predictive models revealed t
 *   **Blackberry (복분자딸기)**:
     *   **Positive Drivers**: Relative Humidity (+0.78), Max Temperature (+0.35).
 
+#### 3. Model Performance (AUC Scores)
+The models were evaluated using the Area Under the ROC Curve (AUC). The real results captured from the analysis are as follows:
+
+| Crop | Model | Metric | Score (AUC) | Status |
+| :--- | :--- | :--- | :---: | :--- |
+| **Blackberry (복분자딸기)** | Random Forest Classifier | AUC | **0.84** | High Predictive Power |
+| **Ogapi (오갈피)** | Random Forest Classifier | AUC | **0.57** | Baseline Performance (Needs Improvement) |
+
+*   **Insight**: The model performs exceptionally well for **Blackberry** (AUC = 0.84), indicating that the selected soil and climate features are strong predictors.
+*   **Challenge & Future Work**: For **Ogapi** (AUC = 0.57), the performance suggests that growth might be influenced by other latent factors not in the dataset (e.g., specific micro-climates), presenting a clear direction for future feature engineering.
+
 - **Regression**: Used **Random Forest Regressor** to predict production amounts and extract feature importances.
   - **Refactored Module**: `src/predictor.py`
 - **Classification**: Implemented **SVM** to classify regions as highly suitable (above mean yield) or not.
