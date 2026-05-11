@@ -22,8 +22,8 @@ def main():
     print("         Unified Analytics Pipeline Runner        ")
     print("==================================================")
 
-    # Define paths - Using the path found in the notebooks
-    data_path = "C:/Users/user/Desktop/진짜임 이게 찐.csv"
+    # Define paths - Using a relative path for portability
+    data_path = "data/forestry_data.csv"
 
     if not os.path.exists(data_path):
         print(f"\n[⚠️ Warning] Data file not found at: {data_path}")

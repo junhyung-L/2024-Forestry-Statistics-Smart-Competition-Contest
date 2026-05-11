@@ -101,6 +101,9 @@ The models were evaluated using the Area Under the ROC Curve (AUC). The ROC curv
   - **Refactored Module**: `src/classifier.py`
 - **Key Findings**: Discovered that different crops require distinct model architectures for optimal performance (e.g., non-linear relationships in soil data were better captured by Random Forest).
 
+> [!NOTE]
+> **Model Refactoring Note**: The original competition study explored multiple algorithms (SVM, Random Forest, Logistic Regression) tailored to each crop's characteristics. However, for the refactored production pipeline in this repository, a unified framework using **SVM (for classification)** and **Random Forest (for regression)** was implemented to ensure maintainability and scalability of the code.
+
 ## 🖼️ 5. Visualization & Prototype (시각화 및 프로토타입)
 
 - **Service Dashboard**:
@@ -142,7 +145,9 @@ The models were evaluated using the Area Under the ROC Curve (AUC). The ROC curv
    ```bash
    pip install -r requirements.txt
    ```
-2. Run the full pipeline:
+2. Place the data file:
+   - Save the raw dataset as `forestry_data.csv` in the `data/` directory.
+3. Run the full pipeline:
    ```bash
    python run_pipeline.py
    ```
