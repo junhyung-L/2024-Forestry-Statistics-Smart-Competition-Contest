@@ -4,6 +4,17 @@ This repository contains the award-winning project for the **'2024 Forestry Stat
 
 The project focuses on optimizing crop cultivation and predicting production using advanced statistical analysis and machine learning techniques on forestry and environmental data.
 
+## 🚀 Executive Summary (TL;DR)
+- **The Problem**: Prospective foresters face high risks due to a lack of accessible, data-driven guidance on optimal crop cultivation locations.
+- **The Solution**: Developed a web-based recommendation service mapping optimal regions for 7 major forestry crops using Soil and Climate data fusion.
+- **The Result**: Won the **Grand Prize (1st Place)** by proving predictability with high AUC scores (up to 0.94) and providing actionable domain insights.
+
+## 🛠 Tech Stack
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)
+![Scikit-Learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)
+![GeoPandas](https://img.shields.io/badge/GeoPandas-33A652?style=for-the-badge&logo=geopandas&logoColor=white)
+
 ---
 
 ## 📌 1. Problem Definition (문제 정의)
@@ -58,27 +69,19 @@ We identified variables with a statistically significant relationship with crop 
 #### 2. Model Feature Importance (Coefficients)
 Feature importances (coefficients) derived from the predictive models revealed the directional impact of key variables:
 
-*   **Chestnut (밤)**:
-    *   **Positive Drivers**: Max Temperature (+1.08), Precipitation (+1.06).
-    *   **Negative Drivers**: Soil Type 3 (-0.82), Annual Mean Temperature (-0.75).
-*   **Blackberry (복분자딸기)**:
-    *   **Positive Drivers**: Relative Humidity (+0.78), Max Temperature (+0.35).
-*   **Deodeok (더덕)**:
-    *   **Top Drivers**: Annual Mean Temperature (0.21), Temperature Difference (0.17).
-*   **Shiitake (생표고)**:
-    *   **Top Drivers**: Precipitation (0.26), Max Temperature (0.23).
-*   **Yam (마)**:
-    *   **Top Drivers**: Min Temperature (0.35), Max Temperature (0.34).
-*   **Bellflower (도라지)**:
-    *   **Top Drivers**: Temperature Difference (0.34), Precipitation (0.34).
+*   **Chestnut (밤)**: Thrives in sandy loam (양토). Best modeled with **Logistic Regression** due to linear relationships.
+*   **Yam (마)**: Showed the best performance with **SVM** for suitability classification.
+*   **Shiitake (생표고)**: Humidity is critical (optimal 85-95%). Interestingly, the impact of temperature is decreasing due to the spread of modern sawdust cultivation (톱밥 재배) methods.
+*   **Ogapi & Deodeok (오갈피 & 더덕)**: Large temperature differences in high-altitude regions (200-800m) are optimal for sugar accumulation and quality. Best modeled with **Random Forest**.
+*   **Bellflower (도라지)**: Requires sufficient precipitation (100-150mm) and high temperature differences.
 
 #### 3. Model Performance (AUC Scores)
 The models were evaluated using the Area Under the ROC Curve (AUC). The ROC curves demonstrate high predictive power for key crops:
 
 | Crop | Model | Metric | Score (AUC) | Status |
 | :--- | :--- | :--- | :---: | :--- |
-| **Chestnut (밤)** | Random Forest Classifier | AUC | **0.94** | Excellent |
-| **Yam (마)** | Random Forest Classifier | AUC | **0.91** | Excellent |
+| **Chestnut (밤)** | Logistic Regression | AUC | **0.94** | Excellent |
+| **Yam (마)** | Support Vector Machine (SVM) | AUC | **0.91** | Excellent |
 | **Blackberry (복분자딸기)** | Random Forest Classifier | AUC | **0.84** | High Predictive Power |
 | **Ogapi (오갈피)** | Random Forest Classifier | AUC | **0.57** | Baseline Performance |
 
