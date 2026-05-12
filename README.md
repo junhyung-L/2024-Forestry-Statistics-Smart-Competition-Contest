@@ -1,10 +1,12 @@
-﻿# 🏆 Developing a Business Model and Web Platform to Facilitate Forest Resource Utilization
+# 🏆 Developing a Business Model and Web Platform to Facilitate Forest Resource Utilization
 
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
 [![Scikit-Learn](https://img.shields.io/badge/scikit--learn-F7931E?style=flat&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
 [![Status](https://img.shields.io/badge/Status-Completed-success.svg)]()
 
-This repository contains the award-winning project for the **'2024 Forestry Statistics Smart Competition'** hosted by the **Korea Forest Service** and **Korea Forestry Promotion Institute**. The project focuses on optimizing crop cultivation and predicting production using advanced statistical analysis and machine learning techniques on forestry and environmental data.
+This repository contains the award-winning project for the **'2024 Forestry Statistics Smart Competition'** hosted by the **Korea Forest Service** and **Korea Forestry Promotion Institute**.
+
+The project focuses on optimizing crop cultivation and predicting production using advanced statistical analysis and machine learning techniques on forestry and environmental data.
 
 ## 🚀 Executive Summary (TL;DR)
 - **The Problem**: Prospective foresters face high risks due to a lack of accessible, data-driven guidance on optimal crop cultivation locations.
@@ -19,114 +21,97 @@ This repository contains the award-winning project for the **'2024 Forestry Stat
 
 ---
 
-## 🔬 1. Problem Definition
+## 📌 1. Problem Definition (문제 정의)
 - **Background**: Prospective foresters and farmers face high risks and "Trial & Error" costs when deciding which crops to plant and where, due to a lack of data-driven guidance.
 - **Objective**: To identify optimal cultivation regions for various forestry crops (Chestnuts, Blackberries, etc.) and predict production based on soil and climate data.
 - **Vision**: "Empowering non-technical stakeholders with data-driven forestry insights."
 
----
+## 📊 2. Data Acquisition & Preprocessing (데이터 수집 및 전처리)
+- **Multi-Source Data Fusion**:
+  - **Soil Data**: Chemistry (Acidity, Moisture), Texture, Depth, and Drainage from Forestry Service GIS.
+  - **Climate Data**: 30-year climate normals (Temperature, Precipitation, Humidity) from the Korea Meteorological Administration (KMA).
+  - **Production Data**: Historical crop yield data.
+- **Refactored Module**: `src/data_loader.py`
+  - Automatically maps Korean column names to professional English variables (e.g., `soil_depth_type`, `chestnut_kg`).
+  - Handles missing values and feature engineering (e.g., `temp_diff`).
 
-## 🛠️ 2. System Architecture & Dual Modeling Framework
-To process the multi-source data and provide both prediction and classification, we developed a dual-track pipeline:
-
-```mermaid
-graph TD
-    A[Raw Forestry & Climate Data] --> B[Data Loader & Preprocessing]
-    B --> C[Statistical Analysis <br> ANOVA, Chi-Square]
-    C --> D[Feature Engineering]
-    
-    D --> E[Dual Modeling Framework]
-    
-    E --> F[Regression <br> Random Forest]
-    E --> G[Classification <br> SVM]
-    
-    F --> H[Production Prediction]
-    G --> I[Suitability Mapping]
-    
-    H --> J[Service Dashboard]
-    I --> J
-```
-
----
-
-## 📊 3. Data Acquisition & Preprocessing
-To capture both macroeconomic trends and local consumer behaviors, we fused multi-source data:
-- **Soil Data**: Chemistry (Acidity, Moisture), Texture, Depth, and Drainage from Forestry Service GIS.
-- **Climate Data**: 30-year climate normals (Temperature, Precipitation, Humidity) from the Korea Meteorological Administration (KMA).
-- **Production Data**: Historical crop yield data.
-
----
-
-## 🔬 4. Statistical Analysis & Insights
-Conducted Chi-Square tests, ANOVA, Levene's test, and Spearman correlation to validate relationships between soil conditions and crop production.
-
-- **Homogeneity of Variance**: Verified the assumption of equal variances across different crop production groups.
+## 🔬 3. Statistical Analysis & Insights (통계 분석 및 인사이트)
+- **Methodology**: Conducted Chi-Square tests, ANOVA, Levene's test, and Spearman correlation to validate relationships between soil conditions and crop production.
+- **Homogeneity of Variance (Levene's Test)**: Verified the assumption of equal variances across different crop production groups to ensure valid ANOVA results.
 ![Levene's Test](images/levenes_test.png)
-*Figure 1: Levene's Test results showing p-values for different crop variables.*
+*Figure 2: Levene's Test results showing p-values for different crop variables.*
 
 - **Correlation Analysis**: Generated a comprehensive heatmap to analyze the complex relationships between crops and environmental variables.
 ![Correlation Heatmap](images/correlation_heatmap.png)
-*Figure 2: Correlation Heatmap between crops and climate variables.*
+*Figure 3: Correlation Heatmap between crops and climate variables.*
 
-### 📍 Key Insights: Optimal Cultivation Conditions
-Based on the analysis of mean yields in `crop_optimal_conditions.ipynb`, we identified the specific optimal soil conditions for each crop:
+- **Key Insights**:
+  - Validated critical threshold variables for production.
+  - Discovered that **humidity** is the key driver for Fresh Shiitake mushrooms yield (p-value < 0.05).
+- **Refactored Module**: `src/stat_analyzer.py` (Fully in English).
 
-| Crop | Soil Depth Type (토양깊이유형) | Soil Texture Code (토성코드) | Soil Type Code (토양형코드) | Effective Moisture (토양유효수분량) |
-| :--- | :---: | :---: | :---: | :---: |
-| **Chestnut (밤)** | 20.0 | 1.0 | 1.0 | 5.0 |
-| **Bokbunja (복분자딸기)** | 20.0 | 2.0 | 4.0 | 1.0 |
-| **Ogapi (오갈피)** | 20.0 | 3.0 | 3.0 | 1.0 |
-| **Yam (마)** | 20.0 | 1.0 | 1.0 | 4.0 |
-| **Bellflower (도라지)** | 20.0 | 1.0 | 2.0 | 3.0 |
-| **Deodeok (더덕)** | 20.0 | 3.0 | 3.0 | 1.0 |
-| **Shiitake (생표고)** | 20.0 | 1.0 | 4.0 | 2.0 |
+## 🤖 4. Modeling & Evaluation (모델링 및 평가)
+- **Approach**: Implemented a dual modeling framework for both prediction (Regression) and suitability classification.
 
----
-
-## 🤖 5. Modeling & Evaluation
-We implemented a dual modeling framework for both prediction (Regression) and suitability classification.
+Instead of relying on generic accuracy scores, the project focused on identifying statistically significant drivers of production and mapping their impact via regression coefficients.
 
 #### 1. Analysis of Variance (ANOVA) Results
 We identified variables with a statistically significant relationship with crop yield (p-value < 0.05):
 
 | Crop | Significant Variable | p-value | Insight |
 | :--- | :--- | :--- | :--- |
-| **Blackberry** | Soil Available Water Content | **0.000004** | Soil moisture is the critical driver for yield. |
-| **Deodeok** | Soil Available Water Content | **3.07e-08** | Strongest statistical relationship found. |
-| **Shiitake** | Soil Available Water Content | **0.0105** | Water retention capacity dictates growth. |
+| **Blackberry (복분자딸기)** | Soil Available Water Content | **0.000004** | Soil moisture is the critical driver for yield. |
+| **Deodeok (더덕)** | Soil Available Water Content | **3.07e-08** | Strongest statistical relationship found. |
+| **Shiitake (생표고)** | Soil Available Water Content | **0.0105** | Water retention capacity dictates growth. |
 
-#### 2. Model Performance (AUC Scores)
+#### 2. Model Feature Importance (Coefficients)
+Feature importances (coefficients) derived from the predictive models revealed the directional impact of key variables:
+
+*   **Chestnut (밤)**: Thrives in sandy loam (양토). Best modeled with **Logistic Regression** due to linear relationships.
+*   **Yam (마)**: Showed the best performance with **SVM** for suitability classification.
+*   **Shiitake (생표고)**: Humidity is critical (optimal 85-95%). Interestingly, the impact of temperature is decreasing due to the spread of modern sawdust cultivation (톱밥 재배) methods.
+*   **Ogapi & Deodeok (오갈피 & 더덕)**: Large temperature differences in high-altitude regions (200-800m) are optimal for sugar accumulation and quality. Best modeled with **Random Forest**.
+*   **Bellflower (도라지)**: Requires sufficient precipitation (100-150mm) and high temperature differences.
+
+#### 3. Model Performance (AUC Scores)
 The models were evaluated using the Area Under the ROC Curve (AUC). The ROC curves demonstrate high predictive power for key crops:
 
 | Crop | Model | Metric | Score (AUC) | Status |
 | :--- | :--- | :--- | :---: | :--- |
-| **Chestnut** | Logistic Regression | AUC | **0.94** | Excellent |
-| **Yam** | Support Vector Machine (SVM) | AUC | **0.91** | Excellent |
-| **Blackberry** | Random Forest Classifier | AUC | **0.84** | High Predictive Power |
-| **Ogapi** | Random Forest Classifier | AUC | **0.57** | Baseline Performance |
+| **Chestnut (밤)** | Logistic Regression | AUC | **0.94** | Excellent |
+| **Yam (마)** | Support Vector Machine (SVM) | AUC | **0.91** | Excellent |
+| **Blackberry (복분자딸기)** | Random Forest Classifier | AUC | **0.84** | High Predictive Power |
+| **Ogapi (오갈피)** | Random Forest Classifier | AUC | **0.57** | Baseline Performance |
 
 <div style="display: flex; justify-content: space-around;">
   <img src="images/roc_chestnut.png" alt="ROC Chestnut" width="30%"/>
   <img src="images/roc_yam.png" alt="ROC Yam" width="30%"/>
   <img src="images/roc_blackberry.png" alt="ROC Blackberry" width="30%"/>
 </div>
-*Figure 3: ROC Curves for Chestnut (AUC=0.94), Yam (AUC=0.91), and Blackberry (AUC=0.84).*
+*Figure 4: ROC Curves for Chestnut (AUC=0.94), Yam (AUC=0.91), and Blackberry (AUC=0.84).*
 
-### ⚠️ Limitations & Future Work
-- **Feature Limitations**: For **Ogapi** (AUC = 0.57), the low performance suggests that growth might be influenced by other latent factors (e.g., specific micro-climates, soil microbiome) not present in the current dataset.
-- **Future Work**: Plan to integrate hyper-local weather data and explore deep learning approaches for spatial data to improve prediction accuracy for lower-performing crops.
+*   **Insight**: The model performs exceptionally well for **Chestnut** and **Yam** (AUC > 0.90), and **Blackberry** (AUC = 0.84), indicating that the selected soil and climate features are strong predictors.
+*   **Challenge & Future Work**: For **Ogapi** (AUC = 0.57), the performance suggests that growth might be influenced by other latent factors not in the dataset, presenting a clear direction for future feature engineering.
 
----
+- **Regression**: Used **Random Forest Regressor** to predict production amounts and extract feature importances.
+  - **Refactored Module**: `src/predictor.py`
+- **Classification**: Implemented **SVM** to classify regions as highly suitable (above mean yield) or not.
+  - **Refactored Module**: `src/classifier.py`
+- **Key Findings**: Discovered that different crops require distinct model architectures for optimal performance (e.g., non-linear relationships in soil data were better captured by Random Forest).
 
-## 🖼️ 6. Visualization & Prototype
-- **Service Dashboard**: Visualized geographic information using Geopandas heatmaps and provided a recommendation list for optimal cultivation sites.
+> [!NOTE]
+> **Model Refactoring Note**: The original competition study explored multiple algorithms (SVM, Random Forest, Logistic Regression) tailored to each crop's characteristics. However, for the refactored production pipeline in this repository, a unified framework using **SVM (for classification)** and **Random Forest (for regression)** was implemented to ensure maintainability and scalability of the code.
+
+## 🖼️ 5. Visualization & Prototype (시각화 및 프로토타입)
+- **Service Dashboard**:
+  - Visualized geographic information using Geopandas heatmaps.
+  - Provided a recommendation list for optimal cultivation sites.
+  - Displayed market trends and price analysis.
 
 ![Service Dashboard](images/dashboard_collage.png)
-*Figure 4: Service flow and dashboard collage including Geopandas heatmap, recommendation list, and market graph.*
+*Figure 1: Service flow and dashboard collage including Geopandas heatmap, recommendation list, and market graph.*
 
----
-
-## 🏁 7. Conclusion & Business Impact
+## 🏁 6. Conclusion & Business Impact (결론 및 비즈니스 임팩트)
 - **Outcome**: Developed a framework for a functional web service providing a "Cultivation Suitability Map" for prospective foresters.
 - **Analytical ROI**:
   - **Economic Impact**: Reduced the risk for new foresters by providing scientifically validated cultivation maps.
@@ -144,6 +129,7 @@ The models were evaluated using the Area Under the ROC Curve (AUC). The ROC curv
 │   └── classifier.py          # SVM classification for suitability
 ├── reports/                    # Competition reports and presentations
 ├── images/                     # Project screenshots and diagrams
+│   └── dashboard_collage.png  # User-provided service dashboard
 ├── run_pipeline.py             # Master pipeline runner
 └── requirements.txt            # Project dependencies
 ```
@@ -153,7 +139,9 @@ The models were evaluated using the Area Under the ROC Curve (AUC). The ROC curv
    ```bash
    pip install -r requirements.txt
    ```
-2. Run the full pipeline:
+2. Place the data file:
+   - Save the raw dataset as `forestry_data.csv` in the `data/` directory.
+3. Run the full pipeline:
    ```bash
    python run_pipeline.py
    ```
@@ -162,4 +150,6 @@ The models were evaluated using the Area Under the ROC Curve (AUC). The ROC curv
 - **Junhyung L.** (Project Lead)
 
 ---
-*Refactored and polished to meet professional software engineering standards for the [Data Analyst Portfolio](https://github.com/junhyung-L).*
+*Refactored and polished to meet professional software engineering standards for the [Data Analyst Portfolio](https://github.com/junhyung-L/Resume/blob/main/Portfolio/README.md).*
+*Note: Statistical findings and feature importances are based on the actual competition report results.*
+
