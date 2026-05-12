@@ -146,6 +146,12 @@ The models were evaluated using the Area Under the ROC Curve (AUC). The ROC curv
   - **Economic Impact**: Reduced the risk for new foresters by providing scientifically validated cultivation maps.
   - **Policy Support**: Provided a data-driven justification for regional specialized crop promotion.
 
+### 💡 Decision Support for Non-Technical Users (비전문가를 위한 의사결정 지원)
+To ensure that complex machine learning results are actually useful to farmers and prospective foresters (who may not have technical backgrounds):
+- **Intuitive Metrics**: The classification results are translated into a simple 3-tier rating (Highly Suitable, Moderately Suitable, Unsuitable) rather than raw probability scores.
+- **Actionable Dashboard**: The model feeds into a Geopandas-based heatmap dashboard, allowing users to visually inspect their land without reading a single line of code.
+- **Scalability**: This architecture serves as a baseline that can be easily ported to mobile apps or web services for real-time field consultation.
+
 ---
 
 ## 📁 Repository Structure
