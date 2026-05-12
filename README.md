@@ -1,4 +1,8 @@
-# 2024 Forestry Statistics Smart Competition: Grand Prize (1st Place) 🏆
+# 2024 Forestry Statistics Smart Competition: Crop Cultivation Optimization
+
+[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
+[![Scikit-Learn](https://img.shields.io/badge/scikit--learn-F7931E?style=flat&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![Status](https://img.shields.io/badge/Status-Completed-success.svg)]()
 
 This repository contains the award-winning project for the **'2024 Forestry Statistics Smart Competition'** hosted by the **Korea Forest Service** and **Korea Forestry Promotion Institute**.
 
@@ -10,21 +14,19 @@ The project focuses on optimizing crop cultivation and predicting production usi
 - **The Result**: Won the **Grand Prize (1st Place)** by proving predictability with high AUC scores (up to 0.94) and providing actionable domain insights.
 
 ## 🛠 Tech Stack
-![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
-![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)
-![Scikit-Learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)
-![GeoPandas](https://img.shields.io/badge/GeoPandas-33A652?style=for-the-badge&logo=geopandas&logoColor=white)
+- **Modeling**: Scikit-Learn (SVM, Random Forest, Logistic Regression)
+- **Data Processing**: Pandas, NumPy
+- **GIS & Spatial Analysis**: GeoPandas
+- **Statistical Analysis**: SciPy (ANOVA, Chi-Square, Levene's Test)
 
 ---
 
 ## 📌 1. Problem Definition (문제 정의)
-
 - **Background**: Prospective foresters and farmers face high risks and "Trial & Error" costs when deciding which crops to plant and where, due to a lack of data-driven guidance.
 - **Objective**: To identify optimal cultivation regions for various forestry crops (Chestnuts, Blackberries, etc.) and predict production based on soil and climate data.
 - **Vision**: "Empowering non-technical stakeholders with data-driven forestry insights."
 
 ## 📊 2. Data Acquisition & Preprocessing (데이터 수집 및 전처리)
-
 - **Multi-Source Data Fusion**:
   - **Soil Data**: Chemistry (Acidity, Moisture), Texture, Depth, and Drainage from Forestry Service GIS.
   - **Climate Data**: 30-year climate normals (Temperature, Precipitation, Humidity) from the Korea Meteorological Administration (KMA).
@@ -34,7 +36,6 @@ The project focuses on optimizing crop cultivation and predicting production usi
   - Handles missing values and feature engineering (e.g., `temp_diff`).
 
 ## 🔬 3. Statistical Analysis & Insights (통계 분석 및 인사이트)
-
 - **Methodology**: Conducted Chi-Square tests, ANOVA, Levene's test, and Spearman correlation to validate relationships between soil conditions and crop production.
 - **Homogeneity of Variance (Levene's Test)**: Verified the assumption of equal variances across different crop production groups to ensure valid ANOVA results.
 ![Levene's Test](images/levenes_test.png)
@@ -50,10 +51,7 @@ The project focuses on optimizing crop cultivation and predicting production usi
 - **Refactored Module**: `src/stat_analyzer.py` (Fully in English).
 
 ## 🤖 4. Modeling & Evaluation (모델링 및 평가)
-
 - **Approach**: Implemented a dual modeling framework for both prediction (Regression) and suitability classification.
-
-### Key Statistical Findings & Feature Importance
 
 Instead of relying on generic accuracy scores, the project focused on identifying statistically significant drivers of production and mapping their impact via regression coefficients.
 
@@ -105,7 +103,6 @@ The models were evaluated using the Area Under the ROC Curve (AUC). The ROC curv
 > **Model Refactoring Note**: The original competition study explored multiple algorithms (SVM, Random Forest, Logistic Regression) tailored to each crop's characteristics. However, for the refactored production pipeline in this repository, a unified framework using **SVM (for classification)** and **Random Forest (for regression)** was implemented to ensure maintainability and scalability of the code.
 
 ## 🖼️ 5. Visualization & Prototype (시각화 및 프로토타입)
-
 - **Service Dashboard**:
   - Visualized geographic information using Geopandas heatmaps.
   - Provided a recommendation list for optimal cultivation sites.
@@ -115,7 +112,6 @@ The models were evaluated using the Area Under the ROC Curve (AUC). The ROC curv
 *Figure 1: Service flow and dashboard collage including Geopandas heatmap, recommendation list, and market graph.*
 
 ## 🏁 6. Conclusion & Business Impact (결론 및 비즈니스 임팩트)
-
 - **Outcome**: Developed a framework for a functional web service providing a "Cultivation Suitability Map" for prospective foresters.
 - **Analytical ROI**:
   - **Economic Impact**: Reduced the risk for new foresters by providing scientifically validated cultivation maps.
@@ -124,7 +120,6 @@ The models were evaluated using the Area Under the ROC Curve (AUC). The ROC curv
 ---
 
 ## 📁 Repository Structure
-
 ```text
 ├── notebooks/                  # Original exploratory Jupyter notebooks
 ├── src/                        # Refactored production-ready source code
@@ -140,7 +135,6 @@ The models were evaluated using the Area Under the ROC Curve (AUC). The ROC curv
 ```
 
 ## ⚙️ How to Run
-
 1. Install dependencies:
    ```bash
    pip install -r requirements.txt
@@ -158,3 +152,4 @@ The models were evaluated using the Area Under the ROC Curve (AUC). The ROC curv
 ---
 *Refactored and polished to meet professional software engineering standards for the [Data Analyst Portfolio](https://github.com/junhyung-L/Resume/blob/main/Portfolio/README.md).*
 *Note: Statistical findings and feature importances are based on the actual competition report results.*
+
