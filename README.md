@@ -26,6 +26,26 @@ The project focuses on optimizing crop cultivation and predicting production usi
 - **Objective**: To identify optimal cultivation regions for various forestry crops (Chestnuts, Blackberries, etc.) and predict production based on soil and climate data.
 - **Vision**: "Empowering non-technical stakeholders with data-driven forestry insights."
 
+> ```mermaid
+graph TD
+    A[Raw Forestry & Climate Data] --> B[Data Loader & Preprocessing]
+    B --> C[Statistical Analysis <br> ANOVA, Chi-Square]
+    C --> D[Feature Engineering]
+    
+    D --> E[Dual Modeling Framework]
+    
+    E --> F[Regression <br> Random Forest]
+    E --> G[Classification <br> SVM]
+    
+    F --> H[Production Prediction]
+    G --> I[Suitability Mapping]
+    
+    H --> J[Service Dashboard]
+    I --> J
+```
+
+---
+
 ## 📊 2. Data Acquisition & Preprocessing (데이터 수집 및 전처리)
 - **Multi-Source Data Fusion**:
   - **Soil Data**: Chemistry (Acidity, Moisture), Texture, Depth, and Drainage from Forestry Service GIS.
