@@ -1,4 +1,4 @@
-# 🏆 2024 Forestry Statistics Smart Competition: Crop Cultivation Optimization
+# 🏆 Developing a Business Model and Web Platform to Facilitate Forest Resource Utilization
 
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
 [![Scikit-Learn](https://img.shields.io/badge/scikit--learn-F7931E?style=flat&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
