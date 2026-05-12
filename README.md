@@ -26,7 +26,7 @@ The project focuses on optimizing crop cultivation and predicting production usi
 - **Objective**: To identify optimal cultivation regions for various forestry crops (Chestnuts, Blackberries, etc.) and predict production based on soil and climate data.
 - **Vision**: "Empowering non-technical stakeholders with data-driven forestry insights."
 
-> ```mermaid
+```mermaid
 graph TD
     A[Raw Forestry & Climate Data] --> B[Data Loader & Preprocessing]
     B --> C[Statistical Analysis <br> ANOVA, Chi-Square]
