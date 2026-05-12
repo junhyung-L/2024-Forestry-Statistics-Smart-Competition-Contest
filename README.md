@@ -28,20 +28,29 @@ The project focuses on optimizing crop cultivation and predicting production usi
 
 ```mermaid
 graph TD
-    A[Raw Forestry & Climate Data] --> B[Data Loader & Preprocessing]
-    B --> C[Statistical Analysis <br> ANOVA, Chi-Square]
-    C --> D[Feature Engineering]
-    
-    D --> E[Dual Modeling Framework]
-    
-    E --> F[Regression <br> Random Forest]
-    E --> G[Classification <br> SVM]
-    
-    F --> H[Production Prediction]
-    G --> I[Suitability Mapping]
-    
-    H --> J[Service Dashboard]
-    I --> J
+    subgraph Inputs [1. Environmental Data]
+        A[Soil Data <br> 토양 특성]
+        B[Climate Data <br> 기후 및 고도]
+    end
+
+    subgraph Dual_Framework [2. Dual Modeling Framework]
+        A & B --> C[Feature Engineering <br> ANOVA & Chi-Square 검증]
+        C --> D[Model Selection]
+        
+        D --> E[Classification <br> SVM]
+        D --> F[Regression <br> Random Forest]
+    end
+
+    subgraph Outputs [3. Decision Support]
+        E --> G[Suitability Mapping <br> 재배 적지 분류]
+        F --> H[Production Prediction <br> 생산량 예측]
+        
+        G & H --> I[Decision Support Dashboard <br> 농민 의사결정 지원]
+    end
+
+    style Inputs fill:#f9f,stroke:#333,stroke-width:2px
+    style Dual_Framework fill:#bbf,stroke:#333,stroke-width:2px
+    style Outputs fill:#bfb,stroke:#333,stroke-width:2px
 ```
 
 ---
