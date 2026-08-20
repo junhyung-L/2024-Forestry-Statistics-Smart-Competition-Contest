@@ -1,108 +1,125 @@
-"""
-2024 Forestry Stats Smart Competition: Pipeline Runner
-Ties all modules together to run the full analysis and modeling flow.
-Updated to include advanced evaluation (Cross-Validation) and visualization.
-"""
+"""Run the documented forestry analysis with an explicitly supplied CSV file."""
 
-import os
-import sys
+from __future__ import annotations
 
-# Add src to path if running from root
-sys.path.append(os.path.abspath("src"))
+import argparse
+import json
+import logging
+from pathlib import Path
+from typing import Any
+
+import pandas as pd
 
 from src.classifier import CropClassifier
+from src.config import DEFAULT_CROP_COLUMN, DEFAULT_FEATURES, RESULTS_DIR
 from src.data_loader import DataLoader
 from src.predictor import CropPredictor
 from src.stat_analyzer import StatAnalyzer
 
 
-def main():
-    print("==================================================")
-    print("🌲 2024 Forestry Statistics Smart Competition 🌲")
-    print("         Unified Analytics Pipeline Runner        ")
-    print("==================================================")
-
-    # Define paths - Using a relative path for portability
-    data_path = "data/forestry_data.csv"
-
-    if not os.path.exists(data_path):
-        print(f"\n[⚠️ Warning] Data file not found at: {data_path}")
-        print(
-            "Please ensure the data file is placed in the correct location or update the path in this script."
+def parse_args() -> argparse.Namespace:
+    """Parse the reproducible, file-system-independent command-line interface."""
+    parser = argparse.ArgumentParser(
+        description=(
+            "Run exploratory statistics plus regression and suitability "
+            "classification for one forestry crop column."
         )
-        print("Falling back to a simulated execution or stopping...")
-        return
-
-    # 1. Load Data
-    print("\n[Step 1] Loading and Transforming Data...")
-    loader = DataLoader(data_path)
-    data = loader.load_and_transform()
-    print("✓ Data loaded successfully with English column mapping.")
-
-    # 2. Statistical Analysis
-    print("\n[Step 2] Running Statistical Analysis...")
-    analyzer = StatAnalyzer(data)
-    crop = "chestnut_kg"
-    if crop in data.columns:
-        chi2, anova, spearman = analyzer.perform_analysis(crop)
-        print(f"✓ Statistical Analysis completed for {crop}.")
-        print("\n--- Chi-Square Results ---")
-        print(chi2.head())
-        print("\n--- ANOVA Results ---")
-        print(anova.head())
-    else:
-        print(f"Crop column '{crop}' not found in data.")
-
-    # 3. Regression Modeling with CV and Plotting
-    print("\n[Step 3] Training Regression Models (with Cross-Validation)...")
-    predictor = CropPredictor(data)
-    features = [
-        "avg_temp",
-        "humidity",
-        "precipitation",
-        "soil_depth_type",
-        "soil_texture_code",
-    ]
-    features = [f for f in features if f in data.columns]
-
-    if crop in data.columns and features:
-        print(f"Training Random Forest for {crop}...")
-        results = predictor.train_regression(crop, features)
-        if results:
-            print(f"✓ Model trained.")
-            print(f"  - Test Set R2 Score: {results['r2']:.4f}")
-            print(f"  - 5-Fold CV R2 Mean: {results['cv_r2_mean']:.4f}")
-
-            # Elite addition: Visualization
-            print(f"📊 Displaying Feature Importances for {crop}...")
-            # Note: In a non-interactive environment, this might just save the file.
-            # But we include it to show the code is there.
-            # predictor.plot_importances(crop)
-    else:
-        print("Missing crop or features for regression.")
-
-    # 4. Classification Modeling with CV and Plotting
-    print(
-        "\n[Step 4] Training Classification Models (with Cross-Validation)..."
     )
-    classifier = CropClassifier(data)
-    if crop in data.columns and features:
-        print(f"Training SVM for {crop} suitability...")
-        cls_results = classifier.train_svm(crop, features)
-        if cls_results:
-            print(f"✓ Model trained.")
-            print(f"  - Test Set AUC: {cls_results['auc']:.4f}")
-            print(f"  - 5-Fold CV AUC Mean: {cls_results['cv_auc_mean']:.4f}")
+    parser.add_argument(
+        "--input-csv",
+        type=Path,
+        required=True,
+        help="CSV file containing the original or already-English column names.",
+    )
+    parser.add_argument(
+        "--crop",
+        default=DEFAULT_CROP_COLUMN,
+        help=f"Production target column after mapping (default: {DEFAULT_CROP_COLUMN}).",
+    )
+    parser.add_argument(
+        "--features",
+        nargs="+",
+        default=list(DEFAULT_FEATURES),
+        help="Candidate soil/climate feature columns after mapping.",
+    )
+    parser.add_argument(
+        "--encoding",
+        default="cp949",
+        help="Preferred input encoding; UTF-8 fallbacks are attempted automatically.",
+    )
+    parser.add_argument(
+        "--results-dir",
+        type=Path,
+        default=RESULTS_DIR,
+        help="Directory for CSV analysis tables and the JSON metric summary.",
+    )
+    return parser.parse_args()
 
-            # Elite addition: Visualization
-            print(f"📊 Displaying ROC Curve for {crop}...")
-            # classifier.plot_roc_curve(crop)
-    else:
-        print("Missing crop or features for classification.")
 
-    print("\n==================================================")
-    print("Pipeline execution completed.")
-    print("==================================================")
+def numeric_metrics(result: dict[str, Any], keys: tuple[str, ...]) -> dict[str, float]:
+    """Keep only JSON-safe numeric metrics from a model result dictionary."""
+    return {key: float(result[key]) for key in keys if key in result}
+
+
+def main() -> None:
+    """Load input, run the maintained workflow, and save inspectable outputs."""
+    args = parse_args()
+    input_path = args.input_csv.expanduser().resolve()
+    results_dir = args.results_dir.expanduser().resolve()
+
+    if not input_path.is_file():
+        raise SystemExit(f"Input CSV was not found: {input_path}")
+
+    results_dir.mkdir(parents=True, exist_ok=True)
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+
+    data = DataLoader(input_path, encoding=args.encoding).load_and_transform()
+    if args.crop not in data.columns:
+        available = ", ".join(map(str, data.columns))
+        raise SystemExit(
+            f"Crop column '{args.crop}' was not found after mapping. "
+            f"Available columns: {available}"
+        )
+
+    data[args.crop] = pd.to_numeric(data[args.crop], errors="coerce")
+    data = data.dropna(subset=[args.crop]).copy()
+    if data.empty:
+        raise SystemExit(f"Crop column '{args.crop}' has no numeric observations.")
+
+    features = [feature for feature in args.features if feature in data.columns]
+    if not features:
+        raise SystemExit(
+            "None of --features exist after mapping. Supply headers from your input CSV."
+        )
+
+    analyzer = StatAnalyzer(data)
+    chi_square, anova, spearman = analyzer.perform_analysis(args.crop)
+    chi_square.to_csv(results_dir / f"{args.crop}_chi_square.csv")
+    anova.to_csv(results_dir / f"{args.crop}_anova.csv")
+    spearman.to_csv(results_dir / f"{args.crop}_spearman.csv")
+
+    regression = CropPredictor(data).train_regression(args.crop, features)
+    classification = CropClassifier(data).train_svm(args.crop, features)
+
+    summary = {
+        "input_csv": str(input_path),
+        "crop_column": args.crop,
+        "features_used": features,
+        "statistics": {
+            "chi_square_rows": int(len(chi_square)),
+            "anova_rows": int(len(anova)),
+            "spearman_rows": int(len(spearman)),
+        },
+        "regression": numeric_metrics(
+            regression, ("r2", "mse", "cv_r2_mean", "n_rows", "n_features")
+        ),
+        "classification": numeric_metrics(
+            classification, ("auc", "cv_auc_mean", "n_rows", "n_features")
+        ),
+    }
+    summary_path = results_dir / f"{args.crop}_summary.json"
+    summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    logging.info("Saved analysis tables and model summary to %s", results_dir)
 
 
 if __name__ == "__main__":

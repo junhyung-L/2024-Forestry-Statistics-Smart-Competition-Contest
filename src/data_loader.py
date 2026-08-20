@@ -4,6 +4,8 @@ Handles loading, cleaning, and English translation of forestry data.
 """
 
 import logging
+from pathlib import Path
+
 import pandas as pd
 
 logging.basicConfig(
@@ -14,8 +16,8 @@ logging.basicConfig(
 class DataLoader:
     """Handles loading, cleaning, and English translation of forestry data."""
 
-    def __init__(self, data_path: str, encoding: str = "cp949"):
-        self.data_path = data_path
+    def __init__(self, data_path: str | Path, encoding: str = "cp949"):
+        self.data_path = Path(data_path)
         self.encoding = encoding
         self.column_mapping = {
             "토성코드": "soil_texture_code",
@@ -38,9 +40,25 @@ class DataLoader:
         }
 
     def load_and_transform(self) -> pd.DataFrame:
-        """Loads data, renames columns, and fills missing values."""
+        """Load data, map headers, and apply the documented basic cleaning.
+
+        The historical inputs are expected to use CP949, while contributors
+        commonly export UTF-8 CSV files. The requested encoding is tried first
+        before safe UTF-8 fallbacks.
+        """
         logging.info(f"Loading data from {self.data_path}")
-        data = pd.read_csv(self.data_path, encoding=self.encoding)
+        tried_encodings = list(dict.fromkeys((self.encoding, "utf-8-sig", "utf-8")))
+        last_error: UnicodeDecodeError | None = None
+        for encoding in tried_encodings:
+            try:
+                data = pd.read_csv(self.data_path, encoding=encoding)
+                logging.info("Loaded input with %s encoding", encoding)
+                break
+            except UnicodeDecodeError as error:
+                last_error = error
+        else:
+            assert last_error is not None
+            raise last_error
 
         # Rename columns to English
         data.rename(columns=self.column_mapping, inplace=True)

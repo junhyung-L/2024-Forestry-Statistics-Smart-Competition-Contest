@@ -1,103 +1,96 @@
-"""
-2024 Forestry Stats Smart Competition: Predictor Module
-Trains regression models to predict crop production.
-Added cross-validation and visualization for elite portfolio standards.
-"""
+"""Regression model for positive production observations."""
+
+from __future__ import annotations
 
 import logging
-from typing import Dict, List, Tuple
+from typing import Any, Sequence
+
 import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.impute import SimpleImputer
 from sklearn.metrics import mean_squared_error, r2_score
-from sklearn.model_selection import cross_val_score, train_test_split
+from sklearn.model_selection import KFold, cross_val_score, train_test_split
+from sklearn.pipeline import Pipeline
 
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+from .config import RANDOM_STATE, TEST_SIZE
 
 
 class CropPredictor:
-    """Trains regression models to predict crop production."""
+    """Fit a random-forest regressor and report held-out and CV R-squared."""
 
     def __init__(self, data: pd.DataFrame):
         self.data = data
-        self.models = {}
-        self.feature_importances = {}
+        self.models: dict[str, Pipeline] = {}
+        self.feature_importances: dict[str, dict[str, float]] = {}
 
-    def train_regression(self, crop_col: str, features: List[str]) -> Dict:
-        """Trains a RandomForestRegressor for a specific crop with CV."""
-        filtered_data = self.data[self.data[crop_col] > 0].copy()
+    def train_regression(self, crop_col: str, features: Sequence[str]) -> dict[str, Any]:
+        """Train on positive observations and return reproducible regression metrics.
 
+        Missing values are imputed inside the sklearn pipeline, so each
+        cross-validation fold and the held-out set are transformed independently.
+        """
+        filtered_data = self.data.loc[
+            self.data[crop_col] > 0, list(features) + [crop_col]
+        ].copy()
         if len(filtered_data) < 10:
-            logging.warning(f"Not enough data for {crop_col}. Skipping.")
+            logging.warning("Not enough positive observations for %s; skipping regression.", crop_col)
             return {}
 
-        X = filtered_data[features]
+        X = pd.get_dummies(filtered_data[list(features)], drop_first=False, dtype=float)
         y = filtered_data[crop_col]
-
-        # Handle categorical variables in X if any
-        X = pd.get_dummies(X, drop_first=True)
-
-        # Split data
         X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.2, random_state=42
+            X, y, test_size=TEST_SIZE, random_state=RANDOM_STATE
         )
+        if len(X_train) < 2:
+            logging.warning("Training split is too small for %s; skipping regression.", crop_col)
+            return {}
 
-        model = RandomForestRegressor(n_estimators=100, random_state=42)
-
-        # Elite addition: Cross-Validation
-        cv_scores = cross_val_score(model, X_train, y_train, cv=5, scoring="r2")
-        logging.info(
-            f"Cross-Validation R2 scores for {crop_col}: {cv_scores.mean():.4f} (+/- {cv_scores.std() * 2:.4f})"
+        model = Pipeline(
+            [
+                ("imputer", SimpleImputer(strategy="median")),
+                ("model", RandomForestRegressor(n_estimators=300, random_state=RANDOM_STATE)),
+            ]
         )
-
-        # Fit model
+        cv_folds = min(5, len(X_train))
+        cv_scores = cross_val_score(
+            model,
+            X_train,
+            y_train,
+            cv=KFold(n_splits=cv_folds, shuffle=True, random_state=RANDOM_STATE),
+            scoring="r2",
+        )
         model.fit(X_train, y_train)
-
-        y_pred = model.predict(X_test)
-        r2 = r2_score(y_test, y_pred)
-        mse = mean_squared_error(y_test, y_pred)
-
-        logging.info(f"Test Set Model for {crop_col}: R2 = {r2:.4f}, MSE = {mse:.4f}")
-
-        self.models[crop_col] = model
-        self.feature_importances[crop_col] = dict(
-            zip(X.columns, model.feature_importances_)
+        predictions = model.predict(X_test)
+        importances = dict(
+            zip(X.columns, model.named_steps["model"].feature_importances_, strict=True)
         )
+        self.models[crop_col] = model
+        self.feature_importances[crop_col] = importances
 
         return {
             "model": model,
-            "r2": r2,
-            "mse": mse,
+            "r2": r2_score(y_test, predictions),
+            "mse": mean_squared_error(y_test, predictions),
             "cv_r2_mean": cv_scores.mean(),
-            "importances": self.feature_importances[crop_col],
+            "importances": importances,
+            "n_rows": len(filtered_data),
+            "n_features": X.shape[1],
         }
 
-    def plot_importances(self, crop_col: str):
-        """Plots feature importances for a specific crop."""
+    def plot_importances(self, crop_col: str) -> None:
+        """Show the fitted random-forest impurity importances for one crop."""
         if crop_col not in self.feature_importances:
-            print(f"No importance data for {crop_col}. Run training first.")
-            return
+            raise ValueError(f"No importance data for {crop_col}; run training first.")
 
-        importances = self.feature_importances[crop_col]
-        sorted_importances = dict(
-            sorted(importances.items(), key=lambda item: item[1], reverse=True)
+        ordered = sorted(
+            self.feature_importances[crop_col].items(), key=lambda item: item[1], reverse=True
         )
-
+        names, values = zip(*ordered, strict=True)
         plt.figure(figsize=(10, 6))
-        plt.bar(
-            sorted_importances.keys(),
-            sorted_importances.values(),
-            color="skyblue",
-        )
-        plt.title(f"Feature Importances for {crop_col}")
-        plt.ylabel("Importance")
-        plt.xlabel("Features")
+        plt.bar(names, values, color="skyblue")
+        plt.title(f"Feature importances for {crop_col}")
+        plt.ylabel("Impurity importance")
         plt.xticks(rotation=45, ha="right")
         plt.tight_layout()
         plt.show()
-
-
-if __name__ == "__main__":
-    print("Predictor Module loaded.")

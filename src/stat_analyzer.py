@@ -36,13 +36,21 @@ class StatAnalyzer:
             logging.warning(f"Not enough data for {production_col}. Skipping.")
             return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
 
-        # Chi-Square test
+        # Chi-square requires two categorical variables. Production is numeric,
+        # so use up to four quantile bins instead of a sparse table with one
+        # column per observed yield.
         chi2_results = {}
+        bin_count = min(4, filtered_data[production_col].nunique())
+        production_bins = None
+        if bin_count >= 2:
+            production_bins = pd.qcut(
+                filtered_data[production_col], q=bin_count, duplicates="drop"
+            )
         for cat_col in self.categorical_columns:
-            if cat_col in filtered_data.columns:
-                crosstab = pd.crosstab(
-                    filtered_data[cat_col], filtered_data[production_col]
-                )
+            if cat_col in filtered_data.columns and production_bins is not None:
+                crosstab = pd.crosstab(filtered_data[cat_col], production_bins)
+                if crosstab.shape[0] < 2 or crosstab.shape[1] < 2:
+                    continue
                 _, p, _, _ = chi2_contingency(crosstab)
                 chi2_results[cat_col] = {"p-value": p}
 
@@ -50,10 +58,8 @@ class StatAnalyzer:
         anova_results = {}
         for cat_col in self.categorical_columns:
             if cat_col in filtered_data.columns:
-                groups = [
-                    group[production_col].values
-                    for name, group in filtered_data.groupby(cat_col)
-                ]
+                groups = [group[production_col].values for _, group in filtered_data.groupby(cat_col)]
+                groups = [group for group in groups if len(group) >= 2]
                 if len(groups) > 1:
                     _, p = f_oneway(*groups)
                     anova_results[cat_col] = {"p-value": p}
